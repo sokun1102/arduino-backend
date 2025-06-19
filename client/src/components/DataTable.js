@@ -83,11 +83,14 @@ const DataTable = () => {
     }
 
     const csvContent = [
-      ['ID', 'Distance (cm)', 'Motor Status', 'Timestamp'],
+      ['ID', 'Distance (cm)', 'Motor Status', 'Mode', 'Manual Status', 'Schedule Info', 'Timestamp'],
       ...data.map(row => [
         row.id,
         row.distance,
         row.motor_status,
+        row.mode || '',
+        row.manual_status || '',
+        row.schedule_info || '',
         new Date(row.timestamp).toLocaleString()
       ])
     ].map(row => row.join(',')).join('\n');
@@ -104,13 +107,54 @@ const DataTable = () => {
   // Định dạng trạng thái motor
   const formatMotorStatus = (status) => {
     const statusLower = status?.toLowerCase();
-    if (statusLower === 'active' || statusLower === 'running') {
-      return <Badge bg="success" className="motor-badge">🔄 {status}</Badge>;
-    } else if (statusLower === 'stopped' || statusLower === 'inactive') {
-      return <Badge bg="secondary" className="motor-badge">⏸️ {status}</Badge>;
+    if (statusLower === 'on') {
+      return <Badge bg="success" className="motor-badge">🔓 MỞ</Badge>;
+    } else if (statusLower === 'off') {
+      return <Badge bg="secondary" className="motor-badge">🔒 ĐÓNG</Badge>;
     } else {
       return <Badge bg="warning" className="motor-badge">⚠️ {status}</Badge>;
     }
+  };
+
+  // Định dạng chế độ làm việc
+  const formatMode = (mode) => {
+    if (!mode) return null;
+    
+    switch(mode.toUpperCase()) {
+      case 'AUTO':
+        return <Badge bg="primary" className="mode-badge">🤖 TỰ ĐỘNG</Badge>;
+      case 'MANUAL':
+        return <Badge bg="warning" className="mode-badge">👐 THỦ CÔNG</Badge>;
+      case 'SCHEDULE':
+        return <Badge bg="info" className="mode-badge">⏰ LỊCH TRÌNH</Badge>;
+      default:
+        return <Badge bg="secondary" className="mode-badge">{mode}</Badge>;
+    }
+  };
+
+  // Định dạng trạng thái thủ công
+  const formatManualStatus = (status) => {
+    if (!status) return null;
+    
+    if (status.toUpperCase() === 'ON') {
+      return <Badge bg="success" className="manual-badge">BẬT</Badge>;
+    } else {
+      return <Badge bg="danger" className="manual-badge">TẮT</Badge>;
+    }
+  };
+
+  // Định dạng thông tin lịch trình
+  const formatScheduleInfo = (info) => {
+    if (!info) return <span className="no-schedule">Không có lịch</span>;
+    return (
+      <div className="schedule-info">
+        {info.split('|').map((schedule, index) => (
+          <Badge key={index} bg="info" className="schedule-badge">
+            {schedule.trim()}
+          </Badge>
+        ))}
+      </div>
+    );
   };
 
   // Định dạng khoảng cách với màu sắc theo mức độ
@@ -296,6 +340,18 @@ const DataTable = () => {
                     <span className="header-icon">⚙️</span>
                     Motor Status
                   </th>
+                  <th className="th-mode">
+                    <span className="header-icon">🔄</span>
+                    Mode
+                  </th>
+                  <th className="th-manual">
+                    <span className="header-icon">👐</span>
+                    Manual
+                  </th>
+                  <th className="th-schedule">
+                    <span className="header-icon">📅</span>
+                    Schedule
+                  </th>
                   <th className="th-timestamp">
                     <span className="header-icon">🕐</span>
                     Timestamp
@@ -314,6 +370,15 @@ const DataTable = () => {
                       </td>
                       <td className="td-motor">
                         {formatMotorStatus(row.motor_status)}
+                      </td>
+                      <td className="td-mode">
+                        {formatMode(row.mode)}
+                      </td>
+                      <td className="td-manual">
+                        {formatManualStatus(row.manual_status)}
+                      </td>
+                      <td className="td-schedule">
+                        {formatScheduleInfo(row.schedule_info)}
                       </td>
                       <td className="td-timestamp">
                         <span className="timestamp-value">

@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import DataTable from './components/DataTable';
 import CustomCursor from './components/CustomCursor';
+import ModeSelector from './components/ModeSelector';
+import ManualControl from './components/ManualControl';
+import ScheduleManager from './components/ScheduleManager';
+import axios from 'axios';
 
 function App() {
+  const [mode, setMode] = useState('AUTO');
+
+  useEffect(() => {
+    fetchMode();
+  }, []);
+
+  const fetchMode = async () => {
+    try {
+      const res = await axios.get('http://localhost:1234/mode');
+      setMode(res.data.mode || 'AUTO');
+    } catch (err) {
+      setMode('AUTO');
+    }
+  };
+
+  const handleModeChange = (newMode) => {
+    setMode(newMode);
+  };
+
   return (
     <div className="App">
       <CustomCursor />
@@ -48,6 +71,9 @@ function App() {
       </nav>
 
       <main className="container mt-4">
+        <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
+        {mode === 'MANUAL' && <ManualControl />}
+        {mode === 'SCHEDULE' && <ScheduleManager />}
         <div className="system-overview">
           <div className="row mb-4">
             <div className="col-md-4">
@@ -113,20 +139,9 @@ function App() {
             </div>
           </div>
         </div>
-        
         <div className="data-section">
           <div className="section-header">
             <h3>Sensor Data & Control</h3>
-            <div className="section-controls">
-              <button className="btn btn-primary btn-sm">
-                <span className="btn-icon">▶️</span>
-                Start Monitoring
-              </button>
-              <button className="btn btn-secondary btn-sm">
-                <span className="btn-icon">⏸️</span>
-                Pause
-              </button>
-            </div>
           </div>
           <DataTable />
         </div>

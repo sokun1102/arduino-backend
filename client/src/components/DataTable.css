@@ -485,3 +485,83 @@
   .th-motor { width: 120px; }
   .th-timestamp { width: 140px; }
 }
+
+/* Thêm CSS cho các cột mới */
+.th-mode, .th-manual, .th-schedule {
+  text-align: center;
+}
+
+.td-mode, .td-manual, .td-schedule {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Định dạng badge */
+.mode-badge, .manual-badge, .schedule-badge {
+  font-size: 0.85rem;
+  padding: 5px 10px;
+  margin: 2px;
+  display: inline-block;
+}
+
+.mode-badge {
+  min-width: 100px;
+}
+
+.manual-badge {
+  min-width: 60px;
+}
+
+.schedule-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 200px;
+}
+
+.schedule-badge {
+  white-space: normal;
+  text-align: left;
+  margin-bottom: 3px;
+}
+
+.no-schedule {
+  color: #999;
+  font-style: italic;
+}
+
+/* Tùy chỉnh CSS hiện tại */
+.td-id {
+  width: 70px;
+  text-align: center;
+}
+
+.td-distance {
+  width: 120px;
+  text-align: center;
+}
+
+.td-motor {
+  width: 100px;
+  text-align: center;
+}
+
+.td-timestamp {
+  width: 180px;
+}
+
+/* Đảm bảo bảng responsive */
+.table-responsive {
+  overflow-x: auto;
+}
+
+@media (max-width: 992px) {
+  .mode-badge, .manual-badge, .schedule-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+  
+  .schedule-info {
+    max-width: 150px;
+  }
+}
