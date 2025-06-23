@@ -7,6 +7,7 @@ import ModeSelector from './components/ModeSelector';
 import ManualControl from './components/ManualControl';
 import ScheduleManager from './components/ScheduleManager';
 import axios from 'axios';
+import { API_BASE_URL } from './apiConfig';
 
 function App() {
   const [mode, setMode] = useState('AUTO');
@@ -17,7 +18,7 @@ function App() {
 
   const fetchMode = async () => {
     try {
-      const res = await axios.get('http://localhost:1234/mode');
+      const res = await axios.get(`${API_BASE_URL}/mode`);
       setMode(res.data.mode || 'AUTO');
     } catch (err) {
       setMode('AUTO');

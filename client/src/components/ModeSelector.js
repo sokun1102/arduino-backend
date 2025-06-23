@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../apiConfig';
 
 const ModeSelector = ({ currentMode, onModeChange }) => {
   const [mode, setMode] = useState(currentMode || 'AUTO');
@@ -12,7 +13,7 @@ const ModeSelector = ({ currentMode, onModeChange }) => {
     const newMode = e.target.value;
     setMode(newMode);
     try {
-      await axios.post('http://localhost:1234/mode', { mode: newMode });
+      await axios.post(`${API_BASE_URL}/mode`, { mode: newMode });
       if (onModeChange) onModeChange(newMode);
     } catch (err) {
       alert('Lỗi khi đổi chế độ!');

@@ -6,6 +6,7 @@ import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 import Badge from 'react-bootstrap/Badge';
 import './DataTable.css';
+import { API_BASE_URL } from '../apiConfig';
 
 const DataTable = () => {
   const [data, setData] = useState([]); // Dữ liệu từ backend
@@ -22,7 +23,7 @@ const DataTable = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:1234/data');
+      const response = await axios.get(`${API_BASE_URL}/data`);
       setData(response.data);
       setTotalRecords(response.data.length);
       setLastUpdate(new Date());
@@ -50,7 +51,7 @@ const DataTable = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://localhost:1234/search', {
+      const response = await axios.get(`${API_BASE_URL}/search`, {
         params: {
           start: searchStart,
           end: searchEnd,

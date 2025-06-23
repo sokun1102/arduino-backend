@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../apiConfig';
 
 const ScheduleManager = () => {
   const [schedules, setSchedules] = useState([]);
@@ -13,7 +14,7 @@ const ScheduleManager = () => {
 
   const fetchSchedules = async () => {
     try {
-      const res = await axios.get('http://localhost:1234/schedule');
+      const res = await axios.get(`${API_BASE_URL}/schedule`);
       setSchedules(res.data.schedule || []);
     } catch (err) {
       setSchedules([]);
@@ -25,7 +26,7 @@ const ScheduleManager = () => {
     const newSchedules = [...schedules, { on: onDateTime, off: offDateTime }];
     setLoading(true);
     try {
-      await axios.post('http://localhost:1234/schedule', { schedule: newSchedules });
+      await axios.post(`${API_BASE_URL}/schedule`, { schedule: newSchedules });
       setSchedules(newSchedules);
       setOnDateTime('');
       setOffDateTime('');
@@ -39,7 +40,7 @@ const ScheduleManager = () => {
     const newSchedules = schedules.filter((_, i) => i !== idx);
     setLoading(true);
     try {
-      await axios.post('http://localhost:1234/schedule', { schedule: newSchedules });
+      await axios.post(`${API_BASE_URL}/schedule`, { schedule: newSchedules });
       setSchedules(newSchedules);
     } catch (err) {
       alert('Lỗi khi xóa lịch!');

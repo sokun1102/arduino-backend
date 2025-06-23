@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../apiConfig';
 
 const ManualControl = () => {
   const [status, setStatus] = useState('OFF');
@@ -11,7 +12,7 @@ const ManualControl = () => {
 
   const fetchStatus = async () => {
     try {
-      const res = await axios.get('http://localhost:1234/manual');
+      const res = await axios.get(`${API_BASE_URL}/manual`);
       setStatus(res.data.status);
     } catch (err) {
       setStatus('OFF');
@@ -22,7 +23,7 @@ const ManualControl = () => {
     setLoading(true);
     const newStatus = status === 'ON' ? 'OFF' : 'ON';
     try {
-      await axios.post('http://localhost:1234/manual', { status: newStatus });
+      await axios.post(`${API_BASE_URL}/manual`, { status: newStatus });
       setStatus(newStatus);
     } catch (err) {
       alert('Lỗi khi gửi lệnh!');
