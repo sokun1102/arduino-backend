@@ -345,10 +345,6 @@ const DataTable = () => {
                     <span className="header-icon">🔄</span>
                     Mode
                   </th>
-                  <th className="th-manual">
-                    <span className="header-icon">👐</span>
-                    Manual
-                  </th>
                   <th className="th-schedule">
                     <span className="header-icon">📅</span>
                     Schedule
@@ -374,9 +370,6 @@ const DataTable = () => {
                       </td>
                       <td className="td-mode">
                         {formatMode(row.mode)}
-                      </td>
-                      <td className="td-manual">
-                        {formatManualStatus(row.manual_status)}
                       </td>
                       <td className="td-schedule">
                         {formatScheduleInfo(row.schedule_info)}
