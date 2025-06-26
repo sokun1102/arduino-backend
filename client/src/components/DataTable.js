@@ -158,27 +158,35 @@ const DataTable = () => {
     );
   };
 
-  // Định dạng khoảng cách với màu sắc theo mức độ
+  // Định dạng khoảng cách với 2 số lẻ và badge màu
   const formatDistance = (distance) => {
     const dist = parseFloat(distance);
-    let className = 'distance-normal';
-    let icon = '📏';
-    
+    let className = 'distance-far';
+    let icon = '🟢';
     if (dist < 10) {
       className = 'distance-close';
       icon = '🔴';
     } else if (dist < 30) {
       className = 'distance-medium';
       icon = '🟡';
-    } else {
-      className = 'distance-far';
-      icon = '🟢';
     }
-
     return (
       <span className={`distance-value ${className}`}>
-        {icon} {dist} cm
+        {icon} {dist.toFixed(2)} cm
       </span>
+    );
+  };
+
+  // Định dạng timestamp đẹp
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    const date = new Date(timestamp);
+    return (
+      <>
+        <span className="date-part">📅 {date.toLocaleDateString('vi-VN')}</span>
+        <br />
+        <span className="time-part">🕐 {date.toLocaleTimeString('vi-VN')}</span>
+      </>
     );
   };
 
@@ -375,11 +383,7 @@ const DataTable = () => {
                         {formatScheduleInfo(row.schedule_info)}
                       </td>
                       <td className="td-timestamp">
-                        <span className="timestamp-value">
-                          📅 {new Date(row.timestamp).toLocaleDateString()}
-                          <br />
-                          🕐 {new Date(row.timestamp).toLocaleTimeString()}
-                        </span>
+                        {formatTimestamp(row.timestamp)}
                       </td>
                     </tr>
                   ))
