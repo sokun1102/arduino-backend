@@ -7,10 +7,12 @@ import ModeSelector from './components/ModeSelector';
 import ManualControl from './components/ManualControl';
 import ScheduleManager from './components/ScheduleManager';
 import axios from 'axios';
-import { API_BASE_URL } from './apiConfig';
+import { FaMicrochip, FaCheckCircle, FaCloud, FaRegLightbulb } from 'react-icons/fa';
 
 function App() {
   const [mode, setMode] = useState('AUTO');
+  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState('');
 
   useEffect(() => {
     fetchMode();
@@ -18,7 +20,7 @@ function App() {
 
   const fetchMode = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/mode`);
+      const res = await axios.get('http://localhost:1234/mode');
       setMode(res.data.mode || 'AUTO');
     } catch (err) {
       setMode('AUTO');
@@ -27,140 +29,54 @@ function App() {
 
   const handleModeChange = (newMode) => {
     setMode(newMode);
+    setToastMsg(`Chuyển sang chế độ ${newMode}`);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 1800);
   };
 
   return (
     <div className="App">
       <CustomCursor />
-      <header className="App-header">
+      <header className="App-header fade-in">
         <div className="header-content">
-          <div className="arduino-icon">⚡</div>
           <div className="title-section">
-            <h1>Arduino Sensor Monitor</h1>
-            <p className="subtitle">Real-time data visualization and control</p>
+            <span className="icon-glow"><FaMicrochip size={38} /></span>
+            <h1 className="glow-title">Arduino IoT Dashboard</h1>
+            <p className="subtitle">Giám sát & điều khiển thiết bị IoT thực tế</p>
           </div>
           <div className="status-indicators">
-            <div className="status-item">
-              <div className="status-led"></div>
-              System Online
-            </div>
+            {/* <span className="status-dot online status-animate"></span> */}
+            <span className="status-text"><FaCheckCircle style={{marginRight:4}}/>Hệ thống hoạt động</span>
           </div>
         </div>
       </header>
-      
-      <nav className="sensor-nav">
-        <div className="container">
-          <div className="nav-items">
-            <div className="nav-item active">
-              <div className="nav-icon">📡</div>
-              <span>Ultrasonic Sensor</span>
-            </div>
-            <div className="nav-item">
-              <div className="nav-icon">⚙️</div>
-              <span>Stepper Motor</span>
-            </div>
-            <div className="nav-item">
-              <div className="nav-icon">🔌</div>
-              <span>Driver Control</span>
-            </div>
-            <div className="nav-item">
-              <div className="nav-icon">📊</div>
-              <span>Data Monitor</span>
-            </div>
-          </div>
-        </div>
-      </nav>
 
       <main className="container mt-4">
-        <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
-        {mode === 'MANUAL' && <ManualControl />}
-        {mode === 'SCHEDULE' && <ScheduleManager />}
-        <div className="system-overview">
-          <div className="row mb-4">
-            <div className="col-md-4">
-              <div className="sensor-card ultrasonic-card">
-                <div className="card-header">
-                  <h5>HC-SR05 Ultrasonic</h5>
-                  <div className="sensor-status online"></div>
-                </div>
-                <div className="card-body">
-                  <div className="sensor-reading">
-                    <span className="reading-value">--</span>
-                    <span className="reading-unit">cm</span>
-                  </div>
-                  <div className="sensor-range">
-                    <small>Range: 2-400cm</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-md-4">
-              <div className="sensor-card driver-card">
-                <div className="card-header">
-                  <h5>ULN2003 Driver</h5>
-                  <div className="sensor-status online"></div>
-                </div>
-                <div className="card-body">
-                  <div className="driver-channels">
-                    <div className="channel">IN1</div>
-                    <div className="channel">IN2</div>
-                    <div className="channel">IN3</div>
-                    <div className="channel">IN4</div>
-                  </div>
-                  <div className="voltage-info">
-                    <small>5V-12V Operation</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="col-md-4">
-              <div className="sensor-card motor-card">
-                <div className="card-header">
-                  <h5>28BYJ-48 Motor</h5>
-                  <div className="sensor-status online"></div>
-                </div>
-                <div className="card-body">
-                  <div className="motor-stats">
-                    <div className="stat">
-                      <span className="stat-label">Steps:</span>
-                      <span className="stat-value">0</span>
-                    </div>
-                    <div className="stat">
-                      <span className="stat-label">RPM:</span>
-                      <span className="stat-value">0</span>
-                    </div>
-                  </div>
-                  <div className="motor-info">
-                    <small>5V DC | 2048 steps/rev</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="data-section">
-          <div className="section-header">
-            <h3>Sensor Data & Control</h3>
-          </div>
+        <section className="controls-section mb-4 fade-in-up">
+          <ModeSelector currentMode={mode} onModeChange={handleModeChange} />
+          {mode === 'MANUAL' && <ManualControl />}
+          {mode === 'SCHEDULE' && <ScheduleManager />}
+        </section>
+        <section className="data-section fade-in-up">
+          <h3 className="section-title"><FaCloud style={{marginRight:8}}/>Dữ liệu cảm biến & nhật ký hệ thống</h3>
           <DataTable />
-        </div>
+        </section>
       </main>
-      
-      <footer className="app-footer">
+
+      <footer className="app-footer fade-in">
         <div className="container">
           <div className="footer-content">
-            <div className="connection-status">
-              <div className="connection-dot connected"></div>
-              Connected to Arduino
-            </div>
-            <div>© 2024 Arduino Sensor Monitor</div>
+            <span><FaRegLightbulb style={{marginRight:6}}/>© 2024 Arduino IoT Dashboard</span>
+            <span className="footer-status">Kết nối: <span className="footer-dot connected"></span> Backend</span>
           </div>
         </div>
       </footer>
+
+      {showToast && (
+        <div className="custom-toast">{toastMsg}</div>
+      )}
     </div>
   );
 }
 
-export default App
+export default App;
